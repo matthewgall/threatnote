@@ -119,7 +119,22 @@ def user_edit(user_id):
         return render_template('edit_user.html',user_info=user,page_title='Edit User')
     else:
         abort(401)# only admins can access
-        
+
+@app.route('/check_email')
+@login_required
+def check_user_email():
+    user_id=request.args.get('user_id', -1)
+    ret={'id':'None'}
+    
+    email=request.args.get('email')
+    
+    if user_id and email:
+        user=User.query.filter_by(email=email).first()
+        if user and str(user.id) !=str(user_id):
+            ret['id']=user.id
+    return jsonify(ret)   
+    
+    
 @app.route('/user/delete/<user_id>')
 @login_required
 def user_delete(user_id):
