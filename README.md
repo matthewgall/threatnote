@@ -23,3 +23,5 @@ To stop threatnote.io, just run:
 `$ docker-compose down`
 
 To login, use admin@threatnote.io and admin as your credentials
+
+For a general overview of the product, check out https://threatnote.io
