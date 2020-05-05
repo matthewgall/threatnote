@@ -1,6 +1,6 @@
-from . main import app
-from . main import db
-from . models import User, Indicators, Links
+from  main import app
+from  main import db
+from  models import User, Indicators, Links
 
 from flask import request, redirect, jsonify 
 from flask_login import current_user, login_user
@@ -115,7 +115,7 @@ def api_indicator_get(indicator_id):
                 indicator_dict.pop('_sa_instance_state')
             else:
                 indicator_dict={}
-        return jsonify(indicator_dict)
+            return jsonify(indicator_dict)
 
         resp = jsonify({'message' : 'unauthorized'})
         resp.status_code = 401

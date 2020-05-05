@@ -30,6 +30,7 @@ import requirements
 import consumers
 import indicators
 import settings
+import api
 
 
 def enrich_pipeline(json_str):
