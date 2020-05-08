@@ -10,12 +10,13 @@ $ git clone git@github.com:brianwarehime/threatnote.git
 $ cd threatnote/threatnote
 $ cp env_example env
 $ vi env (change the secret key)
+$ add 0.0.0.0 local.docker to your /etc/hosts file
 $ docker build . --tag threatnote 
 $ docker-compose up
 ```
 This will launch the following:
 
-- Flask app running threatnote.io listening on port 5000 (access http://localhost:5000 to login)
+- Flask app running threatnote.io listening on port 5000 (access http://local.docker:5000 to login)
 - Redis server to manage Redis workers
 - A Redis worker named enricher to manage the enrichment jobs
 
