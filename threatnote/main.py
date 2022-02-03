@@ -1,17 +1,15 @@
-from config import create_app
-from config import db
+import os, json, rq
+from config import create_app, db
 from enrichers import enrich_indicator, export_to_misp
 from models import Indicators, Requirements, Reports, Links, User, Consumers, Organization, ReportTags,RequirementReports, RequirementConsumers,Comments
 from datetime import datetime
 from flask import Blueprint, render_template, request, redirect, flash, url_for, jsonify, abort, Response, send_from_directory
 from flask_login import login_required, current_user
-import json
 from redis import Redis
-import rq
 from sqlalchemy import func, asc, desc
 from flask_wtf import CSRFProtect
 
-queue = rq.Queue('enricher', connection=Redis.from_url('redis://'))
+queue = rq.Queue('enricher', connection=Redis.from_url(os.getenv('REDIS_URL', 'redis://')))
 from lib import add_db_entry, get_comments, time_ago,escape_jquery, get_user_info, escape_jquery, parse_indicators
 
 main = Blueprint('main', __name__)
@@ -23,7 +21,6 @@ csrf = CSRFProtect(app)
 csrf.exempt("api.api_indicators_list")
 csrf.exempt("app.api_indicator_get")
 
-
 #these need to be imported after app is created
 import reports
 import requirements
@@ -31,7 +28,6 @@ import consumers
 import indicators
 import settings
 import api
-
 
 def enrich_pipeline(json_str):
     json_data=json.loads(json_str)
@@ -265,9 +261,6 @@ def display_names(value):
     else:
         return column_map.get(value, value.replace('_', ' ').title())
 
-
-
-
 @app.route('/custom_search',methods=['GET'])
 @login_required
 def custom_search():
@@ -315,12 +308,9 @@ def add_comment(obj_type=None, obj_id=None, user=None, comment=None):
         return('success')
     return('Comment insert failed.')
 
-
-
 app.jinja_env.filters['time_ago'] = time_ago   
 app.jinja_env.filters['escape_jquery'] = escape_jquery    
 app.jinja_env.filters['display_names'] = display_names    
 
-    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
